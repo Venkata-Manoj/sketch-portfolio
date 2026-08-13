@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: CI Workflow
 
 on:
@@ -20,12 +21,42 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+=======
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+>>>>>>> 5d09f2b6bb1e0794356efa035a82cc42887f38ff
 
       - name: Install dependencies
         run: npm ci
 
+<<<<<<< HEAD
       - name: Run ESLint
         run: npm run lint
 
       - name: Build project
+=======
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+>>>>>>> 5d09f2b6bb1e0794356efa035a82cc42887f38ff
         run: npm run build
