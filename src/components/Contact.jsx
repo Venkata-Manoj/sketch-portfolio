@@ -15,11 +15,20 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const form = e.target
+    const formData = new FormData(form)
+    const submittedEmail = formData.get('email')?.toString().trim().toLowerCase() || ''
+    const ownerEmail = PROFILE.email.toLowerCase()
+
+    if (submittedEmail === ownerEmail) {
+      setStatus('email-mismatch')
+      return
+    }
+
     setStatus('sending')
     try {
       const res = await fetch(FORMSPREE_URL, {
         method: 'POST',
-        body: new FormData(form),
+        body: formData,
         headers: { Accept: 'application/json' },
       })
       if (!res.ok) throw new Error('Formspree rejected the note')
@@ -76,6 +85,9 @@ export default function Contact() {
                   placeholder="so I can write back"
                   className="w-full border-b-2 border-ink/40 bg-transparent py-1.5 font-body text-ink placeholder:text-ink/35 focus:border-ink focus:outline-none"
                 />
+                <p className="mt-1 font-hand text-sm text-pencil">
+                  * Please enter your own email — do not enter my email ({PROFILE.email}) in the form.
+                </p>
               </div>
               <div>
                 <label htmlFor="contact-message" className="font-hand text-lg text-ink">the note</label>
@@ -105,9 +117,14 @@ export default function Contact() {
                     message delivered — I'll write back within 24–48h ✓
                   </div>
                 )}
+                {status === 'email-mismatch' && (
+                  <div className="mt-4 border-2 border-marker-red bg-paper-light p-3 font-hand text-lg text-marker-red">
+                    ⚠️ Please do not enter my email in this form. Please use your own email.
+                  </div>
+                )}
                 {status === 'error' && (
                   <div className="mt-4 border-2 border-marker-red bg-paper-light p-3 font-hand text-lg text-marker-red">
-                    note got lost in the mail — try bvmanoj61@gmail.com
+                    Check your email once
                   </div>
                 )}
               </div>
