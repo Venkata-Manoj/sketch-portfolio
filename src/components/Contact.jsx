@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Mail, Github, Linkedin, Twitter, Instagram, MapPin, Send, Sparkle } from 'lucide-react'
 import { PROFILE } from '../data'
+import { isOwnerEmail } from '../lib/contactGuard'
 import { PageNo, Squiggle, Tape, DoodleArrow, Stamp } from './doodles'
 
 /* ═══════════════════════════════════════════════════════════════
@@ -16,10 +17,9 @@ export default function Contact() {
     e.preventDefault()
     const form = e.target
     const formData = new FormData(form)
-    const submittedEmail = formData.get('email')?.toString().trim().toLowerCase() || ''
-    const ownerEmail = PROFILE.email.toLowerCase()
+    const submittedEmail = formData.get('email')?.toString().trim() || ''
 
-    if (submittedEmail === ownerEmail) {
+    if (isOwnerEmail(submittedEmail, PROFILE.email)) {
       setStatus('email-mismatch')
       return
     }
